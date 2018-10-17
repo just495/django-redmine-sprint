@@ -1,7 +1,21 @@
 import requests
-import math
+import asyncio
 from django.db import models
 from solo.models import SingletonModel
+
+
+async def get_issues(tasks):
+    issues = await asyncio.gather(*tasks, return_exceptions=True)
+    return issues
+
+
+async def get_issue(url, method='get', payload=None):
+    methods = {'get': requests.get,
+               'post': requests.post}
+    if payload is None:
+        payload = {}
+    r = methods[method](url, params=payload)
+    return r.json()['issue']
 
 
 class Redmine(SingletonModel):
@@ -22,7 +36,7 @@ class Redmine(SingletonModel):
         return [User(**user) for user in response['users'] if user['login'] != 'admin']
 
     def get_issues(self, user=None, sprint=None):
-        params = {'limit': 100, 'offset': 0, 'status_id': '*'}
+        params = {'limit': 100, 'offset': 0, 'status_id': '*', 'key': self.apikey}
         if user:
             params['assigned_to_id'] = user.id
         if sprint:
@@ -33,7 +47,13 @@ class Redmine(SingletonModel):
             params['offset'] += params['limit']
             response = self.request('/issues.json', payload=params)
             issues.append(response['issues'])
-        return IssueCollection([self.request('/issues/%i.json' % issue['id'])['issue'] for issue in issues], sprint)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        tasks = [loop.create_task(get_issue(self.url+'/issues/%i.json' % issue['id'], payload=params)) for issue in issues]
+        if tasks:
+            issues = loop.run_until_complete(get_issues(tasks))
+        loop.close()
+        return IssueCollection(issues, sprint)
 
     class Meta:
         verbose_name = 'Конфигурация Redmine'
