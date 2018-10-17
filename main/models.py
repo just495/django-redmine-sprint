@@ -2,6 +2,27 @@ import requests
 import asyncio
 from django.db import models
 from solo.models import SingletonModel
+from collections import namedtuple
+
+
+UserIssues = namedtuple('UserIssues', 'user issues')
+
+
+def get_users_issues(redmine, sprint):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    users = redmine.get_users()
+    tasks = [get_user_issues(redmine, sprint, user) for user in users]
+    users_issues = loop.run_until_complete(asyncio.gather(*tasks, return_exceptions=True))
+    loop.close()
+    return users_issues
+
+
+async def get_user_issues(redmine, sprint, user):
+    issues = redmine.get_issues(user=user, sprint=sprint)
+    tasks = [get_issue(redmine.url+'/issues/%i.json' % issue['id'], payload={'key': redmine.apikey}) for issue in issues]
+    issues = await asyncio.gather(*tasks, return_exceptions=True)
+    return UserIssues(user, IssueCollection(issues, sprint))
 
 
 async def get_issues(tasks):
@@ -47,13 +68,7 @@ class Redmine(SingletonModel):
             params['offset'] += params['limit']
             response = self.request('/issues.json', payload=params)
             issues.append(response['issues'])
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        tasks = [loop.create_task(get_issue(self.url+'/issues/%i.json' % issue['id'], payload=params)) for issue in issues]
-        if tasks:
-            issues = loop.run_until_complete(get_issues(tasks))
-        loop.close()
-        return IssueCollection(issues, sprint)
+        return issues
 
     class Meta:
         verbose_name = 'Конфигурация Redmine'
