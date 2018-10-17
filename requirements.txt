@@ -1,0 +1,5 @@
+django
+django-solo
+django-mathfilters
+pytz
+requests
