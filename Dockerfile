@@ -8,6 +8,7 @@ ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 
+RUN apt install python3-pip -y
 RUN pip3 install --upgrade pip
 
 ADD ./requirements.txt /tmp/requirements.txt
