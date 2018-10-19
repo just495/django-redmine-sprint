@@ -95,7 +95,7 @@
                             </tr>
                             </thead>
                             <tbody>{% for issue in user_issues.issues %}
-                                <tr class="{% if issue.status.id in complete_statuses %}table-success{% elif issue.status.id in warning_statuses %}table-warning{% elif issue.status.id == 6 %}table-danger{% endif %}">
+                                <tr class="{% if issue.status.id in complete_statuses %}table-success{% elif issue.status.id in warning_statuses %}table-warning{% elif issue.status.id == 6 %}table-danger{% elif issue.status.id == 5 %}table-active{% endif %}">
                                     <td>{{ issue.tracker.name }}</td>
                                     <td>{{ issue.project.name }}</td>
                                     <td><a href="{{ redmine.url }}/issues/{{ issue.id }}" target="_blank">{{ issue.subject }}</a></td>

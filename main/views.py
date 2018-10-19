@@ -15,7 +15,7 @@ def dashboard(request):
         'sprint': sprint,
         'sprints': Sprint.objects.order_by('-name')[:3],
         'redmine': redmine,
-        'complete_statuses': [3, 5, 8],
+        'complete_statuses': [3, 8],
         'warning_statuses': [7, 11]
     }
     return render(request, 'dashboard.html', context=context)

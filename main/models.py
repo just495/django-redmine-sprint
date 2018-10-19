@@ -145,8 +145,8 @@ class IssueCollection:
         # 10 Приостановлена
         # 11 Возвращена в работу
         # 12 Требует уведомления заказчика
-        order_statuses = {1: 3, 2: 1, 3: 10, 5: 15, 6: 20, 7: 5, 8: 12, 10: 10, 11: 2, 12: 10}
-        return iter(sorted(self._issues, key=lambda issue: order_statuses[issue['status']['id']]))
+        order_statuses = {1: 3, 2: 1, 3: 10, 5: 15, 6: 20, 7: 5, 8: 10, 10: 3, 11: 2, 12: 10}
+        return iter(sorted(self._issues, key=lambda issue: (order_statuses[issue['status']['id']], issue['priority']['id']*-1, issue['project']['name'], issue['subject'])))
 
     @property
     def spent_hours(self):
