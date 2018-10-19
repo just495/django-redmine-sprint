@@ -134,7 +134,19 @@ class IssueCollection:
         self._sprint = sprint
 
     def __iter__(self):
-        return iter(self._issues)
+        # статусы
+        # 1 Новая
+        # 2 В работе
+        # 3 Выполнена
+        # 5 Закрыта
+        # 6 Отклонена
+        # 7 Требует уточнения
+        # 8 Прошла Code Review
+        # 10 Приостановлена
+        # 11 Возвращена в работу
+        # 12 Требует уведомления заказчика
+        order_statuses = {1: 3, 2: 1, 3: 10, 5: 15, 6: 20, 7: 5, 8: 12, 10: 10, 11: 2, 12: 10}
+        return iter(sorted(self._issues, key=lambda issue: order_statuses[issue['status']['id']]))
 
     @property
     def spent_hours(self):

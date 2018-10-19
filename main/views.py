@@ -14,6 +14,8 @@ def dashboard(request):
         'users_issues': sorted(users_issues, key=lambda user_issues: user_issues.issues.left_percent, reverse=True),
         'sprint': sprint,
         'sprints': Sprint.objects.order_by('-name')[:3],
-        'redmine': redmine
+        'redmine': redmine,
+        'complete_statuses': [3, 5, 8],
+        'warning_statuses': [7, 11]
     }
     return render(request, 'dashboard.html', context=context)

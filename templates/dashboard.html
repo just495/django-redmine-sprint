@@ -95,13 +95,16 @@
                             </tr>
                             </thead>
                             <tbody>{% for issue in user_issues.issues %}
-                                <tr>
+                                <tr class="{% if issue.status.id in complete_statuses %}table-success{% elif issue.status.id in warning_statuses %}table-warning{% elif issue.status.id == 6 %}table-danger{% endif %}">
                                     <td>{{ issue.tracker.name }}</td>
                                     <td>{{ issue.project.name }}</td>
                                     <td><a href="{{ redmine.url }}/issues/{{ issue.id }}" target="_blank">{{ issue.subject }}</a></td>
                                     <td>{{ issue.priority.name }}</td>
-                                    <td>{{ issue.status.name }}</td>
-                                    <td>{{ issue.spent_hours }} из {% if issue.estimated_hours %} {{ issue.estimated_hours }}{% else %} n/a {% endif %} {%  if issue.spent_hours > issue.estimated_hours %}<i class="fas fa-exclamation-triangle" title="Превышены ожидаемые затраты"></i>{% endif %}</td>
+                                    <td>{{ issue.status.name }}{% if issue.status.id == 2 %} <i style="color: #1de81d; font-size: 10px;" class="fas fa-circle"></i>{% endif %}</td>
+                                    <td>{{ issue.spent_hours }} из {% if issue.estimated_hours %} {{ issue.estimated_hours }}{% else %} n/a {% endif %}
+                                        {%  if issue.spent_hours > issue.estimated_hours %}<i class="fas fa-exclamation-triangle" title="Превышены ожидаемые затраты"></i>{% endif %}
+                                        {%  if not issue.estimated_hours %}<i class="fas fa-exclamation-triangle" title="Не указаны ожидаемые трудозатраты"></i>{% endif %}
+                                    </td>
                                 </tr>{% endfor %}</tbody>
                         </table>
                     </div>
