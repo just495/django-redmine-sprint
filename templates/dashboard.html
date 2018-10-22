@@ -1,20 +1,28 @@
 {% load mathfilters %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Временные затраты сотрудников на спринт</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
           integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
 </head>
 <body>
 <nav class="navbar navbar-light bg-light shadow-sm p-3 mb-5">
-    <span class="navbar-brand mb-0 h1">Спринт
+    <span class="navbar-brand mb-0 h1"><i class="fas fa-tasks"></i> СПРИНТ
     </span>
     <div class="dropdown">
-          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="btn btn-secondary dropdown-toggle"
+             href="#"
+             role="button"
+             id="dropdownMenuLink"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false">
             Спринт {{ sprint.name }}
           </a>
 
@@ -31,27 +39,27 @@
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
-                        <button style="float:left;" class="btn btn-link" type="button" data-toggle="collapse"
-                                data-target="#user{{ user_issues.user.id }}" aria-expanded="true"
+                        <button style="float:left;"
+                                class="btn btn-link"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#user{{ user_issues.user.id }}"
+                                aria-expanded="true"
                                 aria-controls="user{{ user_issues.user.id }}">
-                            <i class="fas fa-user"></i> {{ user_issues.user }}
+                            <i class="fas fa-user"></i> {{ user_issues.user }} <i class="fas fa-caret-down"></i>
                         </button>
                         <div style="float: left; width: 70%; padding-top: 4px;" class="float-right">
                             <div class="progress" style="heght: 20px;">
-                                <div class="progress-bar" role="progressbar" style="
-                                        width: {{ user_issues.issues.left_percent }}%;
-                                        color: black;
-                                        padding-left: 10px;
-                                        padding-bottom: 3px;
-                                        font-weight: 600;
+                                <div class="progress-bar progress-bar-plan
                                         {% if user_issues.issues.left_hours < 0 %}
-                                            background-color: #ff2c2c4f;
+                                            progress-bar-overflow
                                         {% elif user_issues.issues.left_hours == 0 %}
-                                            background-color: #7bff5a4f;
-                                        {% else %}
-                                            background-color: #94c8ff;
-                                        {% endif %}
-                                        " aria-valuenow="{{ user_issues.issues.left_percent }}" aria-valuemin="0"
+                                            progress-bar-complete
+                                        {% endif %}"
+                                     role="progressbar"
+                                     style="width: {{ user_issues.issues.left_percent }}%;"
+                                     aria-valuenow="{{ user_issues.issues.left_percent }}"
+                                     aria-valuemin="0"
                                      aria-valuemax="100">
                                     {% if user_issues.issues.left_hours > 0 %}
                                         осталось времени {{ user_issues.issues.left_hours }} из {{ sprint.hours }}
@@ -63,51 +71,73 @@
                                     {% if user_issues.issues.deviation %}  в т.ч. отклонение {{ user_issues.issues.deviation }}{% endif %}
                                 </div>
                             </div>
-                            <div class="progress" style="height: 5px; margin-top: 5px;"
+                            <div class="progress"
+                                 style="height: 5px; margin-top: 5px;"
                                  title="выполнено {{ user_issues.issues.spent_hours }} из {{user_issues.issues.estimated_hours }}">
-                                <div class="progress-bar" role="progressbar" style="
-                                        width: {{ user_issues.issues.spent_percent }}%;
+                                <div class="progress-bar progress-bar-sprint
                                         {% if user_issues.issues.spent_percent > 100 %}
-                                            background-color: #ff2c2c4f;
+                                            progress-bar-overflow
                                         {% elif user_issues.issues.spent_percent == 100 %}
-                                            background-color: #7bff5a4f;
-                                        {% else %}
-                                            background-color: #94c8ff;
-                                        {% endif %}" aria-valuenow="{{ user_issues.issues.spent_percent }}" aria-valuemin="0"
-                                     aria-valuemax="100"></div>
+                                            progress-bar-complete
+                                        {% endif %}"
+                                     role="progressbar"
+                                     style="width: {{ user_issues.issues.spent_percent }}%;"
+                                     aria-valuenow="{{ user_issues.issues.spent_percent }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                </div>
                             </div>
                         </div>
                     </h5>
                 </div>
 
-                <div id="user{{ user_issues.user.id }}" class="collapse" aria-labelledby="user{{ user_issues.user.id }}"
+                <div id="user{{ user_issues.user.id }}"
+                     class="collapse"
+                     aria-labelledby="user{{ user_issues.user.id }}"
                      data-parent="#accordion">
-                    <div class="card-body p-0">
-                        <table class="table">
-                            <thead class="thead-dark">
-                            <tr>
-                                <th>Тип</th>
-                                <th>Проект</th>
-                                <th>Название</th>
-                                <th>Приоритет</th>
-                                <th>Статус</th>
-                                <th>Трудозатраты</th>
+                    <div class="card-body p-0"><table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Трекер</th>
+                            <th>Проект</th>
+                            <th>Название</th>
+                            <th>Приоритет</th>
+                            <th>Статус</th>
+                            <th>Трудозатраты</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for issue in user_issues.issues %}
+                            <tr class="{% if issue.status.id in complete_statuses %}table-success
+                                       {% elif issue.status.id in warning_statuses %}table-warning
+                                       {% elif issue.status.id == 6 %}table-danger
+                                       {% elif issue.status.id == 5 %}table-active{% endif %}">
+                                <td>{{ issue.tracker.name }}</td>
+                                <td>{{ issue.project.name }}</td>
+                                <td><a title="перейти к задаче в redmine"
+                                       style="text-decoration: none;"
+                                       href="{{ redmine.url }}/issues/{{ issue.id }}"
+                                       target="_blank">{{ issue.subject }}</a>
+                                    <br>
+                                    <div class="progress" style="height: 2px;">
+                                      <div class="progress-bar {% if issue.done_ratio == 100 %}
+                                            progress-bar-complete
+                                        {% endif %}" role="progressbar" style="width: {{ issue.done_ratio }}%;" aria-valuenow="{{ issue.done_ratio }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                                <td>{{ issue.priority.name }}</td>
+                                <td>{{ issue.status.name }}{% if issue.status.id == 2 %} <i class="fa fa-circle icon-issue-status-in-work"></i>{% endif %}</td>
+                                <td>{{ issue.spent_hours }} из {% if issue.estimated_hours %} {{ issue.estimated_hours }}{% else %} n/a {% endif %}
+                                    {% if issue.spent_hours > issue.estimated_hours %}
+                                        <i class="fas fa-exclamation-triangle" title="Превышены ожидаемые затраты"></i>
+                                    {% elif not issue.estimated_hours %}
+                                        <i class="fas fa-exclamation-triangle" title="Не указаны ожидаемые трудозатраты"></i>
+                                    {% endif %}
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>{% for issue in user_issues.issues %}
-                                <tr class="{% if issue.status.id in complete_statuses %}table-success{% elif issue.status.id in warning_statuses %}table-warning{% elif issue.status.id == 6 %}table-danger{% elif issue.status.id == 5 %}table-active{% endif %}">
-                                    <td>{{ issue.tracker.name }}</td>
-                                    <td>{{ issue.project.name }}</td>
-                                    <td><a href="{{ redmine.url }}/issues/{{ issue.id }}" target="_blank">{{ issue.subject }}</a></td>
-                                    <td>{{ issue.priority.name }}</td>
-                                    <td>{{ issue.status.name }}{% if issue.status.id == 2 %} <i style="color: #1de81d; font-size: 10px;" class="fas fa-circle"></i>{% endif %}</td>
-                                    <td>{{ issue.spent_hours }} из {% if issue.estimated_hours %} {{ issue.estimated_hours }}{% else %} n/a {% endif %}
-                                        {%  if issue.spent_hours > issue.estimated_hours %}<i class="fas fa-exclamation-triangle" title="Превышены ожидаемые затраты"></i>{% endif %}
-                                        {%  if not issue.estimated_hours %}<i class="fas fa-exclamation-triangle" title="Не указаны ожидаемые трудозатраты"></i>{% endif %}
-                                    </td>
-                                </tr>{% endfor %}</tbody>
-                        </table>
-                    </div>
+                        {% endfor %}
+                        </tbody>
+                    </table></div>
                 </div>
             </div>
         {% endfor %}

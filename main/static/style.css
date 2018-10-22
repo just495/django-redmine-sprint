@@ -1,0 +1,20 @@
+.icon-issue-status-in-work {
+    color: #1de81d;
+    font-size: 10px;
+}
+.progress-bar-plan {
+    color: black;
+    padding-left: 10px;
+    padding-bottom: 3px;
+    font-weight: 600;
+    background-color: #94c8ff;
+}
+.progress-bar-sprint {
+    background-color: #94c8ff;
+}
+.progress-bar-complete {
+    background-color: #7bff5a4f;
+}
+.progress-bar-overflow {
+    background-color: #ff2c2c4f;
+}
