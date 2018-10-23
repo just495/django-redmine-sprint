@@ -129,12 +129,12 @@
                                 <td>{{ issue.status.name }}{% if issue.status.id == 2 %} <i class="fa fa-circle icon-issue-status-in-work"></i>{% endif %}</td>
                                 <td>{{ issue.spent_hours }} из {% if issue.estimated_hours %} {{ issue.estimated_hours }}{% else %} n/a {% endif %}
                                     {% if issue.spent_hours > issue.estimated_hours %}
-                                        <span title="Превышены ожидаемые затраты">🤔</span>
+                                        <span title="Превышены ожидаемые затраты"><i class="fas fa-user-clock"></i></span>
                                     {% elif not issue.estimated_hours %}
-                                        <span title="Не указаны ожидаемые трудозатраты">⚠</span>
+                                        <span title="Не указаны ожидаемые трудозатраты"><i class="fas fa-exclamation-triangle"></i></span>
                                     {% endif %}
                                     {% if issue.status.id in complete_statuses and issue.spent_hours < issue.estimated_hours %}
-                                        <span title="Выполнена за меньшее время">💪</span>{% endif %}
+                                        <span title="Выполнена за меньшее время"><i class="far fa-thumbs-up"></i></span>{% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
