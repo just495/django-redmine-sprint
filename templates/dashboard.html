@@ -39,14 +39,14 @@
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
-                        <button style="float:left;"
+                        <button style="float:left; text-decoration: none;"
                                 class="btn btn-link"
                                 type="button"
                                 data-toggle="collapse"
                                 data-target="#user{{ user_issues.user.id }}"
                                 aria-expanded="true"
                                 aria-controls="user{{ user_issues.user.id }}">
-                            <i class="fas fa-user"></i> {{ user_issues.user }} <i class="fas fa-caret-down"></i>
+                            {{ user_issues.user }} <i class="fas fa-caret-down"></i>
                         </button>
                         <div style="float: left; width: 70%; padding-top: 4px;" class="float-right">
                             <div class="progress" style="heght: 20px;">
@@ -129,10 +129,12 @@
                                 <td>{{ issue.status.name }}{% if issue.status.id == 2 %} <i class="fa fa-circle icon-issue-status-in-work"></i>{% endif %}</td>
                                 <td>{{ issue.spent_hours }} из {% if issue.estimated_hours %} {{ issue.estimated_hours }}{% else %} n/a {% endif %}
                                     {% if issue.spent_hours > issue.estimated_hours %}
-                                        <i class="fas fa-exclamation-triangle" title="Превышены ожидаемые затраты"></i>
+                                        <span title="Превышены ожидаемые затраты">🤔</span>
                                     {% elif not issue.estimated_hours %}
-                                        <i class="fas fa-exclamation-triangle" title="Не указаны ожидаемые трудозатраты"></i>
+                                        <span title="Не указаны ожидаемые трудозатраты">⚠</span>
                                     {% endif %}
+                                    {% if issue.status.id in complete_statuses and issue.spent_hours < issue.estimated_hours %}
+                                        <span title="Выполнена за меньшее время">💪</span>{% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
